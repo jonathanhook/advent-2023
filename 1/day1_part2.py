@@ -36,7 +36,6 @@ for line in lines:
     else:
         cv += words_to_numbers(numbers[0])
 
-    print(line + " " + cv)
     sum += int(cv)
 
 print(sum)

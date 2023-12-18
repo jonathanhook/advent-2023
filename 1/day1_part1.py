@@ -18,8 +18,6 @@ for line in lines:
     else:
         cv += numbers[0]
 
-    print(cv)
-
     sum += int(cv)
 
 print(sum)
