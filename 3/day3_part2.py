@@ -18,12 +18,10 @@ def checkPosition(data, rows, cols, i, j):
     return False
 
 def processData(data):
-
     rows = len(data)
     cols = len(data[0])
 
     gears = dict()
-
     currentNumer = ''
     currentStarPos = ''
     hasStar = False
