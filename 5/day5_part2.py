@@ -45,11 +45,30 @@ def parseInput(input):
             maps[i].append(Mapping(items[0], items[1], items[2]))
 
     lowest = 99999999999
-    for s in seeds:
-        val = processSeed(s, maps)
-        if val < lowest:
-            lowest = val
-        
+    for i in range(0, len(seeds), 2):
+        start = seeds[i]
+        r = seeds[i + 1]
+
+        for i in range(0, len(seeds), 2):
+            start = seeds[i]
+            r = seeds[i + 1]
+
+            s = start
+            e = r
+
+            while s < start + r:
+                a = processSeed(s, maps)
+                b = processSeed(s + e, maps)
+
+                if b - a == e:
+                    s = s + e + 1
+                    e = r - (s - start)
+
+                    if a < lowest:
+                        lowest = a
+                else:
+                    e = int(e / 2)
+
     return lowest
 
 def main(input):
@@ -57,4 +76,4 @@ def main(input):
 
     return 0
 
-main("testInput.txt")
+main("input.txt")
