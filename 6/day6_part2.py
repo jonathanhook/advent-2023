@@ -4,7 +4,6 @@ def getDistance(held, time):
     return held * (time - held)
 
 def findWinningWays(time, record):
-    
     min = 0
     max = 0
 
