@@ -71,11 +71,9 @@ def dfs(x, y, data, visited, map):
     for n in nextSteps:
         val = data[n[1]][n[0]]
         if val == 'S' and len(visited) > 1:
-            #markMap(x, y, map, val)
             return len(visited) + 1
         
         if not n in visited:
-            #markMap(x, y, map, val)
             visited.append((x, y))
             return dfs(n[0], n[1], data, visited, map)
 
@@ -100,7 +98,7 @@ def expandMap(map):
                 a = map[i][j]
                 b = map[i][j+1]
 
-                if (a == 'S' or a == '-' or 'F' or 'L') and (b == '-' or b == '7' or b == 'J' or b == 'S'):
+                if (a == 'S' or a == '-' or a == 'F' or a == 'L') and (b == '-' or b == '7' or b == 'J' or b == 'S'):
                     eRow.append('-')
                 else:
                     eRow.append('x')
@@ -109,9 +107,9 @@ def expandMap(map):
         eRow.append('x')
         eMap.append(eRow)
 
-    for i in range(1, len(eMap), 2):
+    for i in range(1, (len(eMap) * 2)-1, 2):
         dRow = list()
-        for j in range(0, len(eMap[i])):
+        for j in range(0, len(eMap[0])):
             a = eMap[i-1][j]
             b = eMap[i][j]
 
@@ -123,6 +121,8 @@ def expandMap(map):
 
     eMap.insert(0, ['x'] * len(eMap[i]))
     eMap.append(['x'] * len(eMap[i]))
+
+    dumpMap(eMap, True)
 
     return eMap
 
@@ -147,18 +147,17 @@ def countIsolated(map):
                 count += 1
     return count
 
-def dumpMap(map, friendly):
-    for i in range(len(map)):
-        for j in range(len(map[i])):
-            if not friendly:
-                print(map[i][j], end="")
-            elif map[i][j] == '1':
-                print(' ', end="")
-            elif map[i][j] == '0' or map[i][j] == 'x':
-                print('.', end="")
-            else:
-                print('#', end="")
-        print()
+def dumpMap(map, contract):
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(script_directory, "dump.txt")
+    
+    f = open(file_path, "w")
+    
+    for i in range(0, len(map), 1):
+        for j in range(0, len(map[i]), 1):
+            f.write(map[i][j])
+        f.write('\n')
+    f.close()
 
 def task(input):
     data = parseInput(input)
@@ -176,8 +175,6 @@ def task(input):
     eMap = expandMap(map)
     floodFill(0, 0, eMap)
 
-    #dumpMap(eMap, True)
-
     return countIsolated(eMap)
 
 def test(input, expected):
@@ -191,6 +188,9 @@ def main():
     print(test("testInput3.txt", 4))
     print(test("testInput4.txt", 8))
     print(test("testInput5.txt", 10))
+    print(test("testInput6.txt", 1))
+    print(test("testInput7.txt", 1))
+    print(test("testInput8.txt", 4))
     print(task('input.txt'))
 
 main()
