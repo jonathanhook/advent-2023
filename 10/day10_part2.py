@@ -122,8 +122,6 @@ def expandMap(map):
     eMap.insert(0, ['x'] * len(eMap[i]))
     eMap.append(['x'] * len(eMap[i]))
 
-    dumpMap(eMap, True)
-
     return eMap
 
 def floodFill(i, j, eMap):
