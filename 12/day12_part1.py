@@ -16,42 +16,47 @@ def parseInput(input):
 
     return data
 
-def decisionTree(record, groups, place, debug):
-    #if len(groups) == 0:
-    #    return 1
-    if groups[0] > len(record):
+def dtree(record, groups, midGroup, debug):
+    # if not enough left to complete, give up
+    if sum(groups) > len(record):
         return 0
-    
-    if place:
-        toPlace = groups[0]
-        for i in range(toPlace):
-            slot = record[i]
-            if slot == '.':
-                return 0
-            else:
-                debug += '#'
-
-        if ((i+1) > len(record) and len(groups) > 1) and record[i+1] == '#':
+    elif sum(groups) == 0:
+        if '#' in record:
             return 0
-
-        if len(groups) > 1:
-            debug += '.'
-            return decisionTree(record[toPlace + 1:], groups[1:], True, debug) + decisionTree(record[toPlace + 1:], groups[1:], False, debug)
         else:
             return 1
-    else:
-        debug += '.'
-        return decisionTree(record[1:], groups, True, debug) + decisionTree(record[1:], groups, False, debug)
+    
+    # find out if just finished a group
+    justFinished = False
+    newGroups = groups[:]
+    if newGroups[0] == 0:
+        justFinished = True
+        midGroup = False
+        newGroups = newGroups[1:]
 
+    found = 0
+
+    # only skip if slot is ? or .
+    if not midGroup and record[0] != '#':
+        found += dtree(record[1:], newGroups[:], False, debug[:] + '.')
+
+    # only place one if:
+    # - we've not just completed a group
+    # - the current slot is not a .
+    if not justFinished and record[0] != '.':
+        newGroups[0] -= 1
+        found += dtree(record[1:], newGroups[:], True, debug[:] + '#')
+
+    return found
+   
 def task(input):
     data = parseInput(input)
 
-    i = 1
-    result = decisionTree(data[i][0], data[i][1], True, '')
-    result += decisionTree(data[i][0], data[i][1], False, '')
-    print(result)
+    sum = 0
+    for i in range(len(data)):
+        sum += dtree(data[i][0], data[i][1], False, '')
 
-    return result
+    return sum
 
 def test(input, expected):
     result = task(input)
@@ -59,4 +64,5 @@ def test(input, expected):
 
 def main():
     print(test('testInput.txt', 21))
+    print(task('input.txt'))
 main()
