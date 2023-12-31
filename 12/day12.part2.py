@@ -29,12 +29,12 @@ def unfold(data):
         unfolded.append((uRecord, uGroups))
     return unfolded
 
-def dtree(record, groups, midGroup, debug):
+def dtree(record, recordPtr, groups, midGroup, debug, memory):   
     # if not enough left to complete, give up
-    if sum(groups) > len(record):
+    if sum(groups) > len(record) - recordPtr:
         return 0
     elif sum(groups) == 0:
-        if '#' in record:
+        if '#' in record[recordPtr:]:
             return 0
         else:
             return 1
@@ -51,16 +51,22 @@ def dtree(record, groups, midGroup, debug):
     found = 0
 
     # only skip if slot is ? or .
-    if not midGroup and record[0] != '#':
-        found += dtree(record[1:], newGroups, False, debug + '.')
-    
+    if not midGroup and record[recordPtr] != '#':
+        key = str(recordPtr) + str(newGroups)
+        if key in memory:
+            found += memory[key]
+        else:
+            result = dtree(record, recordPtr + 1, newGroups, False, debug + '.', memory)
+            memory[key] = result
+            found += result
+
     # only place one if:
     # - we've not just completed a group
     # - the current slot is not a .
-    if not justFinished and record[0] != '.':
+    if not justFinished and record[recordPtr] != '.':
         newGroups[0] -= 1
-        found += dtree(record[1:], newGroups, True, debug + '#')
-
+        found += dtree(record, recordPtr + 1, newGroups, True, debug + '#', memory)
+        
     return found
    
 def task(input):
@@ -70,7 +76,7 @@ def task(input):
     sum = 0
     for i in range(len(unfolded)):
         print(str(i) + ' of ' + str(len(unfolded)) + ': ' + unfolded[i][0])
-        sum += dtree(unfolded[i][0], unfolded[i][1], False, '')
+        sum += dtree(unfolded[i][0], 0, unfolded[i][1], False, '', dict())
 
     return sum
 
