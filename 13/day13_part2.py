@@ -78,9 +78,6 @@ def task(input):
                 else: 
                     fixed[j][k] = '#'
 
-                if j == 1 and k == 4:
-                    m = 0
-
                 fixedLof = getLof(fixed, originalLof)
                 if fixedLof[0] != -1 and fixedLof[0] != originalLof[0]:
                     summary += fixedLof[0]
