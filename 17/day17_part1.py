@@ -106,7 +106,7 @@ def test(input, expected):
     return result == expected
 
 def main(): 
-    print(test('testInput.txt', 102))
+    print(test('testInput1.txt', 102))
     print(task('input.txt'))
 
 main()
